@@ -1,5 +1,6 @@
 const request = require('request');
 const { apiKey } = require('../config');
+const xml2js = require('xml2js');
 
 class BusStop {
   async getBusStop(xPos, yPos) {
@@ -7,14 +8,13 @@ class BusStop {
 
     const url = 'http://openapi.tago.go.kr/openapi/service/BusSttnInfoInqireService/getCrdntPrxmtSttnList';
     let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey; /* Service Key*/
-    queryParams += '&' + encodeURIComponent('tmX') + '=' + encodeURIComponent(xPos); /* */
-    queryParams += '&' + encodeURIComponent('tmY') + '=' + encodeURIComponent(yPos); /* */
-    queryParams += '&' + encodeURIComponent('radius') + '=' + encodeURIComponent(100); /* */
+    queryParams += '&' + encodeURIComponent('gpsLati') + '=' + encodeURIComponent(yPos); /* */
+    queryParams += '&' + encodeURIComponent('gpsLong') + '=' + encodeURIComponent(xPos); /* */
 
     request({
       url: url + queryParams,
       method: 'GET'
-    }, function (error, response, body) {
+    }, (error, response, body) => {
       console.log('Status', response.statusCode);
       console.log('Headers', JSON.stringify(response.headers));
       console.log('Reponse received', body);
@@ -23,24 +23,39 @@ class BusStop {
     return busStop;
   }
 
-  async getBusArrivalList(stationId) {
+  async getBusArrivalList(cityCode, nodeId) {
     const busArrivalList = null;
 
-    var url = 'http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station';
-    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=f%2BgH2HxZMaIPz54Y%2BU6j7qlKPAhzvBMP1%2FxNEFdh6EedEDuHMIDrXbw27Cp3Cz%2BRBeGEoTyPBu4dbbuQ7GoIvg%3D%3D';
-    queryParams += '&' + encodeURIComponent('serviceKey') + '=' + encodeURIComponent('1234567890');
-    queryParams += '&' + encodeURIComponent('stationId') + '=' + encodeURIComponent('200000078');
+    const url = 'http://openapi.tago.go.kr/openapi/service/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList';
+    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey;
+    queryParams += '&' + encodeURIComponent('cityCode') + '=' + encodeURIComponent(cityCode);
+    queryParams += '&' + encodeURIComponent('nodeId') + '=' + encodeURIComponent(nodeId);
 
     request({
       url: url + queryParams,
       method: 'GET'
-    }, function (error, response, body) {
+    }, (error, response, body) => {
       console.log('Status', response.statusCode);
       console.log('Headers', JSON.stringify(response.headers));
       console.log('Reponse received', body);
     });
-
     return busArrivalList;
+  }
+
+  async getCityCodes() {
+    const cityCodes = null;
+    const url = 'http://openapi.tago.go.kr/openapi/service/BusSttnInfoInqireService/getCtyCodeList';
+    const queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey;
+  
+    request({
+      url: url + queryParams,
+      method: 'GET'
+    }, (error, response, body) => {
+      console.log('Status', response.statusCode);
+      console.log('Headers', JSON.stringify(response.headers));
+      console.log('Response received', body);
+    });
+    return cityCodes;
   }
 }
 

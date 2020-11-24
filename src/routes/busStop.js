@@ -20,9 +20,21 @@ const busStop = async (req, res) => {
 
 const busArrivalList = async (req, res) => {
   try {
-    const stationId = parseInt(req.query.stationId);
+    const cityCode = parseInt(req.query.cityCode);
+    const nodeId = req.query.nodeId;
     
-    const busArrivalList = busStopService.getBusArrivalList(stationId);
+    const busArrivalList = busStopService.getBusArrivalList(cityCode, nodeId);
+    res.send();
+  } catch (error) {
+    res.json({
+      message: error.message
+    });
+  }
+};
+
+const cityCodes = async (req, res) => {
+  try {
+    busStopService.getCityCodes();
     res.send();
   } catch (error) {
     res.json({
@@ -33,5 +45,6 @@ const busArrivalList = async (req, res) => {
 
 module.exports = {
   busStop,
-  busArrivalList
+  busArrivalList,
+  cityCodes
 };
