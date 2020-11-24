@@ -4,7 +4,7 @@ const xml2js = require('xml2js');
 
 class BusStop {
   async getBusStop(xPos, yPos) {
-    const busStop = [];
+    const busStop = {};
 
     const url = 'http://openapi.tago.go.kr/openapi/service/BusSttnInfoInqireService/getCrdntPrxmtSttnList';
     let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey;
@@ -17,17 +17,11 @@ class BusStop {
     }, function (error, response, body) {
       xml2js.parseString(body, function (err, result) {
         const arr = result.response.body[0].items[0].item;
-        for (const item of arr) {
-          const obj = {};
-          obj.cityCode = item.citycode[0];
-          obj.nodeId = item.nodeid[0];
-          obj.nodeNo = item.nodeno[0];
-
-          const distance = Math.acos(Math.sin(xPos) * Math.sin(item.gpslati[0]) + Math.cos(xPos) * Math.cos(item.gpslati[0]) * Math.cos(yPos - item.gpslong[0]));
-          obj.distance = distance;
-
-          busStop.push(obj);
-        }
+        const item = arr[0];
+        
+        busStop.cityCode = item.citycode[0];
+        busStop.nodeId = item.nodeid[0];
+        busStop.nodeNo = item.nodeno[0];
       });
 
       console.log(busStop);
