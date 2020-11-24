@@ -18,7 +18,8 @@
   "homepage": "https://github.com/MinJunSeo/blind-service#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "dotenv": "^8.2.0"
