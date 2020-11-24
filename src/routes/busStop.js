@@ -6,8 +6,8 @@ const busStopService = new BusStopService();
 
 const busStop = async (req, res) => {
   try {
-    const xpos = req.query.xpos;
-    const ypos = req.query.ypos;
+    const xpos = parseFloat(req.query.xPos);
+    const ypos = parseFloat(req.query.yPos);
   
     const busStop = busStopService.getBusStop(xpos, ypos);
     res.send();
