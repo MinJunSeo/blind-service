@@ -9,33 +9,9 @@ const busStop = async (req, res) => {
     const xpos = parseFloat(req.query.xPos);
     const ypos = parseFloat(req.query.yPos);
   
-    const busStop = busStopService.getBusStop(xpos, ypos);
-    res.send();
-  } catch (error) {
-    res.json({
-      message: error.message
-    });
-  }
-};
-
-const busArrivalList = async (req, res) => {
-  try {
-    const cityCode = parseInt(req.query.cityCode);
-    const nodeId = req.query.nodeId;
-    
-    const busArrivalList = busStopService.getBusArrivalList(cityCode, nodeId);
-    res.send();
-  } catch (error) {
-    res.json({
-      message: error.message
-    });
-  }
-};
-
-const cityCodes = async (req, res) => {
-  try {
-    busStopService.getCityCodes();
-    res.send();
+    const busStop = await busStopService.getBusStop(xpos, ypos);
+    console.log(busStop);
+    res.send(busStop);
   } catch (error) {
     res.json({
       message: error.message
@@ -44,7 +20,5 @@ const cityCodes = async (req, res) => {
 };
 
 module.exports = {
-  busStop,
-  busArrivalList,
-  cityCodes
+  busStop
 };
