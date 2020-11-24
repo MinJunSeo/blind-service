@@ -1,11 +1,12 @@
-var request = require('request');
+const request = require('request');
+const { apiKey } = require('../config');
 
 class BusStop {
   async getBusStop(xPos, yPos) {
     const busStop = null;
 
-    var url = 'http://ws.bus.go.kr/api/rest/stationinfo/getStationByPos';
-    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=f%2BgH2HxZMaIPz54Y%2BU6j7qlKPAhzvBMP1%2FxNEFdh6EedEDuHMIDrXbw27Cp3Cz%2BRBeGEoTyPBu4dbbuQ7GoIvg%3D%3D'; /* Service Key*/
+    const url = 'http://openapi.tago.go.kr/openapi/service/BusSttnInfoInqireService/getCrdntPrxmtSttnList';
+    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey; /* Service Key*/
     queryParams += '&' + encodeURIComponent('tmX') + '=' + encodeURIComponent(xPos); /* */
     queryParams += '&' + encodeURIComponent('tmY') + '=' + encodeURIComponent(yPos); /* */
     queryParams += '&' + encodeURIComponent('radius') + '=' + encodeURIComponent(100); /* */
