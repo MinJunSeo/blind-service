@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/MinJunSeo/blind-service/issues"
   },
-  "homepage": "https://github.com/MinJunSeo/blind-service#readme"
+  "homepage": "https://github.com/MinJunSeo/blind-service#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "request": "^2.88.2"
+  }
 }
