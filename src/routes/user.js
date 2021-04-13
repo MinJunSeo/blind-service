@@ -9,7 +9,8 @@ const generateUser = async (req, res) => {
     res.send(user);
   } catch (error) {
     res.json({
-      message: error.message
+      message: error.message,
+      line: error.lineNumber
     });
   }
 };
@@ -20,11 +21,12 @@ const putCoord = async (req, res) => {
     const lat = parseFloat(req.query.lat);
     const lon = parseFloat(req.query.lon);
 
-    await userService.putCoord(key, lat, lon);
-    res.send();
+    const coord = await userService.putCoord(key, lat, lon);
+    res.send(coord);
   } catch (error) {
     res.json({
-      message: error.message
+      message: error.message,
+      line: error.lineNumber
     });
   }
 };
@@ -37,26 +39,28 @@ const deleteCoord = async (req, res) => {
     res.send();
   } catch (error) {
     res.json({
-      message: error.message
+      message: error.message,
+      line: error.lineNumber
     });
   }
 };
 
 const getBusDistance = async (req, res) => {
-  try {
-    const xPos = parseFloat(req.query.xPos);
-    const yPos = parseFloat(req.query.yPos);
+  // try {
+  const lat = parseFloat(req.query.lat);
+  const lon = parseFloat(req.query.lon);
 
-    const result = await userService.getBusDistance(xPos, yPos);
-    
-    result.nowPassenger = await userService.getNumOfPassenger(result.nowStationName);
-    result.nextPassenger = await userService.getNumOfPassenger(result.nextStationName);
-    res.send(result);
-  } catch (error) {
-    res.json({
-      message: error.message
-    });
-  }
+  const result = await userService.getBusDistance(lat, lon);
+
+  result.nowPassenger = await userService.getNumOfPassenger(result.nowStationName);
+  result.nextPassenger = await userService.getNumOfPassenger(result.nextStationName);
+  res.send(result);
+  // } catch (error) {
+  //   res.json({
+  //     message: error.message,
+  //     line: error.lineNumber
+  //   });
+  // }
 };
 
 module.exports = {

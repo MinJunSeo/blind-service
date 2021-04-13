@@ -9,7 +9,6 @@ router.put('/coord', putCoord);
 router.delete('/coord', deleteCoord);
 
 router.put('/bus-coord', getBusDistance);
-
 router.get('/bus-stop', busStop);
 
 module.exports = router;

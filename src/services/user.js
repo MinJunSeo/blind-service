@@ -4,6 +4,8 @@ const user = [];
 const coordData = new Map();
 let nextDistance = 999999999;
 const len = dumyData.length;
+let lastIdx = null;
+let busObj = new Object();
 
 const getTwoStation = (lat, lon) => {
   const stations = [];
@@ -25,9 +27,20 @@ const getTwoStation = (lat, lon) => {
     return parseFloat(data1.distance) - parseFloat(data2.distance);
   });
 
-  const sorter = new Array();
-  sorter.push(stations[0]);
-  sorter.push(stations[1]);
+  let sorter;
+
+  sorter = new Array();
+
+  if (lastIdx === null) {
+    sorter.push(stations[0]);
+    sorter.push(stations[1]);
+
+    lastIdx = stations[0].idx;
+  } else {
+    sorter.push(stations.find(element => element.idx === lastIdx));
+    sorter.push(stations.find(element => element.idx === ((lastIdx + 1) % len)));
+  }
+
   sorter.sort((data1, data2) => {
     return parseInt(data1.idx) - parseInt(data2.idx);
   });
@@ -35,13 +48,17 @@ const getTwoStation = (lat, lon) => {
   if (Math.abs(sorter[0].idx - sorter[1].idx) !== 1) {
     const temp = sorter[0];
     sorter[0] = sorter[1];
-    sorter[1] = temp; 
+    sorter[1] = temp;
   }
 
   const nearestIdx = sorter[0].idx;
-  const output = [sorter[0],
+  console.log(nearestIdx);
+
+  const output = [
+    stations.find(element => element.idx === nearestIdx),
     stations.find(element => element.idx === ((nearestIdx + 1) % len)),
-    stations.find(element => element.idx === ((nearestIdx + 2) % len))];
+    stations.find(element => element.idx === ((nearestIdx + 2) % len))
+  ];
   return output;
 };
 
@@ -83,14 +100,13 @@ class User {
           stationId = data.name;
         }
       }
-      console.log(distance);
     }
     obj.stationId = stationId;
     obj.distance = distance;
+    obj.additionalData = busObj;
 
     console.log(obj);
     coordData.set(userKey, obj);
-    console.log(coordData);
     return obj;
   }
 
@@ -112,34 +128,44 @@ class User {
   }
 
   async getBusDistance(lat, lon) {
+    console.log("getBusDistance");
     const arr = getTwoStation(lat, lon);
+    let percent;
+
     const totalDistance = arr[0].distance + arr[1].distance;
-    nextDistance = arr[1].distance;
-    
-    let percent = 100 - (nextDistance / totalDistance * 100);
-    const random = (Math.random() * 150 + 1) / totalDistance;
-    percent += random;
+    const random = (Math.random() * 1000 + 100) / totalDistance;
 
     const latDis = arr[1].lat - arr[0].lat;
     const lonDis = arr[1].lon - arr[0].lon;
-    
-    const movedLat = latDis / 100 * random;
-    const movedLon = lonDis / 100 * random;
-    console.log(random);
 
-    if (percent > 100) {
+    let movedLat = latDis / 100 * random;
+    let movedLon = lonDis / 100 * random;
+
+    nextDistance = arr[1].distance;
+
+    percent = 100 - (nextDistance / totalDistance * 100);
+    percent += random;
+
+    if (percent >= 100) {
       percent = 100;
+      lat = arr[1].lat;
+      lon = arr[1].lon;
+      movedLat = 0;
+      movedLon = 0;
+      lastIdx++;
+      console.log("finished : false");
     }
-    
+
     const output = {
       prevStationName: arr[0].name,
       nowStationName: arr[1].name,
       nextStationName: arr[2].name,
       percent: parseInt(percent),
-      lat: arr[0].lat + movedLat,
-      lon: arr[0].lon + movedLon
+      lat: lat + movedLat,
+      lon: lon + movedLon
     };
 
+    busObj = output;
     return output;
   }
 }

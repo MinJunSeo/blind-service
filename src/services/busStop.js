@@ -7,7 +7,7 @@ class BusStop {
     const busArrivalList = [];
 
     const url = 'http://openapi.tago.go.kr/openapi/service/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList';
-    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey;
+    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=f%2BgH2HxZMaIPz54Y%2BU6j7qlKPAhzvBMP1%2FxNEFdh6EedEDuHMIDrXbw27Cp3Cz%2BRBeGEoTyPBu4dbbuQ7GoIvg%3D%3D';
     queryParams += '&' + encodeURIComponent('cityCode') + '=' + encodeURIComponent(cityCode);
     queryParams += '&' + encodeURIComponent('nodeId') + '=' + encodeURIComponent(nodeId);
 
@@ -24,6 +24,7 @@ class BusStop {
       });
     });
 
+    console.log(JSON.stringify(result.response));
     const arr = result.response.body[0].items[0].item;
     for (const item of arr) {
       const busName = item.routeno[0];
@@ -46,7 +47,7 @@ class BusStop {
     const data = {};
 
     const url = 'http://openapi.tago.go.kr/openapi/service/BusSttnInfoInqireService/getCrdntPrxmtSttnList';
-    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + apiKey;
+    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=f%2BgH2HxZMaIPz54Y%2BU6j7qlKPAhzvBMP1%2FxNEFdh6EedEDuHMIDrXbw27Cp3Cz%2BRBeGEoTyPBu4dbbuQ7GoIvg%3D%3D';
     queryParams += '&' + encodeURIComponent('gpsLati') + '=' + encodeURIComponent(xPos);
     queryParams += '&' + encodeURIComponent('gpsLong') + '=' + encodeURIComponent(yPos);
 
@@ -62,12 +63,13 @@ class BusStop {
       });
     });
 
+    // console.log(JSON.stringify(result.response.body));
     const arr = result.response.body[0].items[0].item;
     const item = arr[0];
 
     const cityCode = item.citycode[0];
     const nodeId = item.nodeid[0];
-    
+
     data.busArrivalList = await this.getBusArrivalList(cityCode, nodeId);
     return data;
   }

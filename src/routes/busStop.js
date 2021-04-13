@@ -6,11 +6,11 @@ const busStopService = new BusStopService();
 
 const busStop = async (req, res) => {
   try {
-    const xpos = parseFloat(req.query.xPos);
-    const ypos = parseFloat(req.query.yPos);
-  
-    const busStop = await busStopService.getBusStop(xpos, ypos);
-    console.log(busStop);
+    const lat = parseFloat(req.query.lat);
+    const lon = parseFloat(req.query.lon);
+
+    const busStop = await busStopService.getBusStop(lat, lon);
+    console.log("log : " + busStop);
     res.send(busStop);
   } catch (error) {
     res.json({
